@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 243 75% 59%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 160 84% 39%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 262 83% 58%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 243 75% 59%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 243 75% 59%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 160 84% 39%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    --accent: 262 83% 58%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 243 75% 59%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ─── PRINT STYLES ─────────────────────────────────────────────────────────── */
+@media print {
+  /* Hide the entire app shell (sidebar, header, dark bg, navigation) */
+  .app-shell { display: none !important; }
+
+  /* Show ONLY the active report's print-area */
+  .print-area {
+    display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 9999 !important;
+    background: #ffffff !important;
+    overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Force all colours to print correctly */
+  .print-area * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide edit controls, buttons, dropdowns inside print area */
+  .no-print { display: none !important; }
+
+  /* Clean table borders */
+  .print-area table { border-collapse: collapse !important; width: 100% !important; }
+
+  /* Page counter for report footer */
+  .report-page-number::after {
+    content: 'Page ' counter(page) ' of ' counter(pages);
+  }
+
+  /* Watermark enhancement for print */
+  .report-watermark { color: rgba(0,0,0,0.03) !important; }
+
+  /* A4 page preview styling — remove shadow, ensure clean edge */
+  .a4-report-page {
+    box-shadow: none !important;
+    page-break-inside: avoid;
+  }
+
+  /* Prevent orphan rows */
+  .a4-report-page tr { page-break-inside: avoid; }
+
+  /* Signature block stays together */
+  .a4-report-page .report-footer {
+    page-break-before: avoid;
+  }
+}
+
+/* ─── A4 PAGE PREVIEW STYLES (on-screen) ─────────────────────────────────────── */
+.a4-report-page {
+  background: #fff;
+  color: #000;
+  margin: 0 auto;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  transition: box-shadow 0.2s;
+}
+
+/* Subtle dashed border when viewing on-screen */
+.a4-report-page::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border: 1px dashed rgba(0,0,0,0.06);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Print-ready indicator strip */
+.a4-report-page::after {
+  content: 'A4';
+  position: absolute;
+  top: 4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 7px;
+  color: rgba(0,0,0,0.12);
+  letter-spacing: 1px;
+  font-weight: 700;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media print {
+  .a4-report-page::before,
+  .a4-report-page::after { display: none !important; }
+}
+
+/* ─── Sidebar scrollbar ────────────────────────────────────────────────────── */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--border)) transparent;
+}
+.sidebar-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.sidebar-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 99px;
+}
+.sidebar-scroll::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.4);
+}
+
+/* ─── AG Grid Theme Customization ──────────────────────────────────────────── */
+.ag-theme-alpine {
+  --ag-background-color: hsl(var(--card));
+  --ag-foreground-color: hsl(var(--foreground));
+  --ag-border-color: hsl(var(--border));
+  --ag-header-background-color: hsl(var(--muted));
+  --ag-odd-row-background-color: hsl(var(--muted) / 0.3);
+  --ag-header-foreground-color: hsl(var(--muted-foreground));
+  --ag-row-hover-color: hsl(var(--muted) / 0.5);
+}
